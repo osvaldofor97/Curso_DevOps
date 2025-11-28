@@ -1,0 +1,47 @@
+name: Run Test on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-python@v4
+        with:
+          dotnet-version: '3.12'
+      
+      - name: Cache pip
+        uses: actions/cache@4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-{{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{} runner.os }-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install upgrade pip
+          pip install requirements.txt
+
+      - name: Run tests
+        run: |
+          mkdir .p test-reports
+          pytest -q --junitxml=test-reports/junit.xml
+
+      - name: Upload test report
+        if: always()
+        uses: actions/artifact@v4
+        with:
+          name: pytest-junit
+          path: test-reports/junit.xml
+
+      - name: Build the pr-.asojectwor
+          
