@@ -1,4 +1,4 @@
-name: Run tests (Python / FastAPI)
+name: CI - FastAPI Tests
 
 on:
   pull_request:
@@ -13,32 +13,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install -r backend/requirements.txt
 
-      - name: Run tests (pytest)
+      - name: Run pytest
+        working-directory: backend
         run: |
-          mkdir -p test-reports
-          pytest -q --junitxml=test-reports/junit.xml
-
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-junit
-          path: test-reports/junit.xml
+          pytest -v
