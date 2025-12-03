@@ -1,0 +1,22 @@
+name: Docker CI/DC
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  IMAGE_BASE_NAME: mi-backend
+
+jobs:
+  API_IMAGE:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: List project files
+        run: ls -a
+
+      - name: Build Docker image
+        run: |
+           docker build -t $IMAGE_BASE_NAME:latest .
