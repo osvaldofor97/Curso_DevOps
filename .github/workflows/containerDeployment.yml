@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 env:
-  IMAGE_BASE_NAME: mi-backend
+  IMAGE_BASE_NAME: osvaldo1997/mi-backend
 
 jobs:
   API_IMAGE:
